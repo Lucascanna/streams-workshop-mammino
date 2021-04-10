@@ -1,4 +1,7 @@
-import { createHash } from 'crypto'
+import { createHash, createCipheriv, createDecipheriv } from 'crypto'
+import { createGzip, createGunzip } from 'zlib'
+
+import pumpify from 'pumpify'
 
 /**
  * Helper function to create properly sized keys from secrets of arbitrary length
@@ -16,7 +19,12 @@ function createCipherKey (secret) {
 export function createEncgz (secret, iv) {
   const cipherKey = createCipherKey(secret)
   // Add your code here...
-  console.log(cipherKey)
+  const encryptStream = createCipheriv('aes256', cipherKey, iv)
+  const compressStream = createGzip()
+  return pumpify(
+    encryptStream,
+    compressStream
+  )
 }
 
 /**
@@ -28,5 +36,10 @@ export function createEncgz (secret, iv) {
 export function createDecgz (secret, iv) {
   const cipherKey = createCipherKey(secret)
   // Add your code here...
-  console.log(cipherKey)
+  const decompressStream = createGunzip()
+  const decryptStream = createDecipheriv('aes256', cipherKey, iv)
+  return pumpify(
+    decompressStream,
+    decryptStream
+  )
 }
