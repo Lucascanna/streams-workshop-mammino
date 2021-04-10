@@ -22,5 +22,9 @@ export default class FibStream extends Readable {
     // make sure you call `this.push()` with the correct value
     // and that you also terminate the stream correctly.
     // Note: remember to emit the number as a string!
+    if (nextVal <= this._max) {
+      return this.push(nextVal.toString())
+    }
+    return this.push(null)
   }
 }

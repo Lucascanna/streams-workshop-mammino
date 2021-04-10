@@ -11,9 +11,12 @@ export default class SeparatorStream extends Transform {
   constructor (separator = '\n', options = {}) {
     super(options)
     // initialize here ...
+    this._separator = separator
   }
 
   _transform (chunk, enc, cb) {
     // Add here the logic for your transform ...
+    this.push(chunk.toString() + this._separator)
+    cb()
   }
 }
