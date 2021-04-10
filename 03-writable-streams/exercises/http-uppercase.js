@@ -15,6 +15,16 @@ export default function makeServer () {
     // res.write(chunk)
     // remember to uppercasify and to handle backpressure
 
+    req.on('data', chunk => {
+      const canContinue = res.write(chunk.toString().toUpperCase())
+      if (!canContinue) {
+        req.pause()
+        res.once('drain', () => req.resume())
+      }
+    })
+    req.on('end', () => {
+      res.end()
+    })
     // when req is finished we need to end the response
   })
 }
