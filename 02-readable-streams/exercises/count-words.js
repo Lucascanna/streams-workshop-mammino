@@ -9,5 +9,9 @@
 export default async function countWords (srcStream) {
   // ... implement here the logic to count the number of words in the stream
   // ... return the actual number of words when the stream is finished
-  return 0
+  let count = 0
+  for await (const chunk of srcStream) {
+    count += (chunk.toString('utf-8').split(/\s+/).length - 1)
+  }
+  return count
 }
